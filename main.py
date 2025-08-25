@@ -1,6 +1,5 @@
-from fastapi import FastAPI, Query, HTTPException
-import random
-import string
+from fastapi import FastAPI, Query
+from generation_services import generate_pass
 
 app = FastAPI()
 
@@ -11,18 +10,4 @@ def generate_pass_route(
     number: bool = True,
     symbols: bool = True
 ):
-    characters= string.ascii_lowercase
-
-    if upper:
-        characters += string.ascii_uppercase
-
-    if number:
-        characters += string.digits
-
-    if symbols:
-        characters += "!@#$%^&*()-_=+[]{};:,.<>?/"
-
-    if not characters:
-        raise HTTPException(status_code= 400, detail= "Nenhum conjunto de caracteres selecionado" )
-
-    return { "password": "".join(random.choice(characters) for _ in range(length)) }
+    return generate_pass(length, upper, number, symbols)
